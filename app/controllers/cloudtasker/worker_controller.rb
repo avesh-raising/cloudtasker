@@ -4,7 +4,7 @@ module Cloudtasker
   # Handle execution of workers
   class WorkerController < ActionController::Base
     # No need for CSRF verification on API endpoints
-    skip_forgery_protection
+    protect_from_forgery with: :null_session
 
     # Authenticate all requests.
     before_action :authenticate!
@@ -27,7 +27,7 @@ module Cloudtasker
       head :reset_content
     rescue InvalidWorkerError => e
       # 404: Job will be retried
-      Cloudtasker.logger.error(e.message)
+      puts e.message
       head :not_found
     rescue StandardError
       # 422: Job will be retried
