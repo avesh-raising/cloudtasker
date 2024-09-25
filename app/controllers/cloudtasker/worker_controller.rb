@@ -25,8 +25,9 @@ module Cloudtasker
     rescue DeadWorkerError
       # 205: job will NOT be retried
       head :reset_content
-    rescue InvalidWorkerError
+    rescue InvalidWorkerError => e
       # 404: Job will be retried
+      Cloudtasker.logger.error(e.message)
       head :not_found
     rescue StandardError
       # 422: Job will be retried
